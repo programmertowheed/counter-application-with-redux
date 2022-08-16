@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Simple Counter Application</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- import redux from cdn -->
+        <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+    </head>
+    <body class="bg-gray-100">
+        <div class="w-screen h-screen p-10 bg-gray-100 text-slate-700">
+            <!-- header -->
+            <h1 class="max-w-md mx-auto text-center text-2xl font-bold mb-10">
+                Simple Counter Application
+            </h1>
+
+            <!-- counter parent div -->
+            <div id="counterParent"></div>
+
+            <!-- add counter increment button -->
+            <div class="mx-auto max-w-md mxspace-y-5">
+                <div
+                    class="p-4 h-auto flex flex-col items-end justify-end px-0"
+                >
+                    <div class="flex space-x-3">
+                        <button
+                            id="addCounter"
+                            class="bg-indigo-400 text-white px-3 py-2 rounded shadow"
+                            id="addCounter"
+                        >
+                            + Add Counter
+                        </button>
+                        <button
+                            id="reset"
+                            class="bg-red-400 text-white px-3 py-2 rounded shadow"
+                            id="reset"
+                        >
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="./script.js"></script>
+    </body>
+</html>
