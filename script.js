@@ -13,6 +13,10 @@ const counterDiv = (counter) => {
                     class="p-4 h-auto flex flex-col items-center justify-center space-y-5 bg-white rounded shadow"
                 >
                     <div id="counter${counter.id}" class="text-2xl font-semibold"></div>
+                    <span class="-ml-20 text-xs bg-white z-10" style="margin-bottom: -26px;">increment/decrement</span>
+                    <div>
+                        <input type="text" id="incrementDecrementInput${counter.id}" value="${counter.differenceValue}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                    </div>
                     <div class="flex space-x-3">
                         <button
                             id="increment${counter.id}"
@@ -37,6 +41,7 @@ const INCREMENT = "increment";
 const DECREMENT = "decrement";
 const ADD_COUNTER = "addCounter";
 const RESET = "reset";
+const INCREMENT_DECREMENT_INPUT = "incrementDecrementInput";
 
 // initial state
 const initialState = [
@@ -54,15 +59,25 @@ const incrementDecrementAction = (type, id) => {
         payload: id,
     };
 };
-const counterAddAction = () => {
+const counterAddAction = (value) => {
     return {
         type: ADD_COUNTER,
+        payload: value,
     };
 };
 const counterResetAction = (value) => {
     return {
         type: RESET,
         payload: value,
+    };
+};
+const incrementDecrementInputAction = (type, id, value) => {
+    return {
+        type: type,
+        payload: {
+            id: id,
+            value: value,
+        },
     };
 };
 
@@ -88,12 +103,22 @@ function counterReducer(state = initialState, action) {
             }
             return { ...c };
         });
+    } else if (action.type === INCREMENT_DECREMENT_INPUT) {
+        return state.map((c) => {
+            if (c.id === action.payload.id) {
+                return {
+                    ...c,
+                    differenceValue: action.payload.value,
+                };
+            }
+            return { ...c };
+        });
     } else if (action.type === ADD_COUNTER) {
         let newState = [...state];
         newState.push({
             id: newState.length + 1,
             value: 0,
-            differenceValue: Math.floor(Math.random() * 10 + 1),
+            differenceValue: action.payload,
         });
         return newState;
     } else if (action.type === RESET) {
@@ -116,10 +141,14 @@ const render = () => {
     const state = store.getState();
     // append counters element into dom
     counterParentEl.innerHTML = state.map(counterDiv);
+
     state.map((s) => {
         const counterEl = document.getElementById("counter" + s.id);
         const incrementEl = document.getElementById("increment" + s.id);
         const decrementEl = document.getElementById("decrement" + s.id);
+        const incrementDecrementInputEl = document.getElementById(
+            "incrementDecrementInput" + s.id
+        );
 
         // update counter count value
         counterEl.innerText = s.value.toString();
@@ -133,6 +162,20 @@ const render = () => {
         decrementEl.addEventListener("click", () => {
             store.dispatch(incrementDecrementAction(DECREMENT, s.id));
         });
+
+        // input keyup listeners
+        incrementDecrementInputEl.addEventListener("keyup", () => {
+            let value = parseInt(incrementDecrementInputEl.value);
+            if (value) {
+                store.dispatch(
+                    incrementDecrementInputAction(
+                        INCREMENT_DECREMENT_INPUT,
+                        s.id,
+                        value
+                    )
+                );
+            }
+        });
     });
 };
 
@@ -144,7 +187,7 @@ store.subscribe(render);
 
 // button counter add click listeners
 addCounterEl.addEventListener("click", () => {
-    store.dispatch(counterAddAction);
+    store.dispatch(counterAddAction(1));
 });
 
 // button counter reset click listeners
