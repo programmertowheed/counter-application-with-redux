@@ -144,7 +144,7 @@ store.subscribe(render);
 
 // button counter add click listeners
 addCounterEl.addEventListener("click", () => {
-    store.dispatch(counterAddAction());
+    store.dispatch(counterAddAction);
 });
 
 // button counter reset click listeners
